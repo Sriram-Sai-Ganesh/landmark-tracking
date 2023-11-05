@@ -1,8 +1,6 @@
 # code modified from 
 # Python OpenCV: Optical Flow with Lucas-Kanade method
 
-# future work on tracking is at https://github.com/Sriram-Sai-Ganesh/landmark-tracking
-
 import numpy as np
 import cv2
 
