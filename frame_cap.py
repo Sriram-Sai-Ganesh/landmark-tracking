@@ -1,18 +1,20 @@
 import cv2
 
-def save_webcam_images():
+# 'Spacebar' to capture and save an image
+# 'q' to exit the program without saving
+
+
+def capture_calibration_image(saveLocation):
     cap = cv2.VideoCapture(0)
-    img_folder_path='output/'
     if not cap.isOpened():
         print("Error: Unable to access the webcam.")
         return
 
-    image_counter = 0
+    result=False
 
     while True:
         # Read a frame from the webcam
         ret, frame = cap.read()
-
         if not ret:
             print("Error: Unable to capture an image from the webcam.")
             break
@@ -23,17 +25,18 @@ def save_webcam_images():
 
         # 'Spacebar' to capture and save an image
         if key == ord(" "):
-            image_counter += 1
-            image_filename = f"img_{image_counter}.jpg"
-            cv2.imwrite(img_folder_path+image_filename, frame)
-            print(f"Image saved as {image_filename}")
-        # 'q' to exit the program
+            cv2.imwrite(saveLocation, frame)
+            print(f"Image saved at {saveLocation}")
+            result=True
+            break
+        # 'q' to exit the program without saving
         elif key == ord("q"):
             break
-
+        
     # Release the camera and close OpenCV windows
     cap.release()
     cv2.destroyAllWindows()
+    return result
 
 if __name__ == "__main__":
-    save_webcam_images()
+    capture_calibration_image('./output/caps/framecap.png')
