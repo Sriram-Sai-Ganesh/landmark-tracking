@@ -39,4 +39,4 @@ def capture_calibration_image(saveLocation):
     return result
 
 if __name__ == "__main__":
-    capture_calibration_image('./output/caps/framecap.png')
+    capture_calibration_image('./output/caps/frame_cap.png')
