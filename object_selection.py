@@ -7,11 +7,7 @@ import os
 
 import utils
 import frame_cap
-
-
-img_file_path='./output/caps/baseline.png'
-template_file_path='./output/regions/template.png'
-
+import globals
 
 class ImageSelectorApp:
     def __init__(self, root):
@@ -32,7 +28,7 @@ class ImageSelectorApp:
         self.save_button = tk.Button(root, text="Save Template", command=self.save_selection)
         self.save_button.config(state=tk.DISABLED)
         
-        self.recapture_button = tk.Button(root, text="Recapture imge", command=self.recapture)
+        self.recapture_button = tk.Button(root, text="Recapture image", command=self.recapture)
         self.recapture_button.config(state=tk.ACTIVE)
 
         self.open_button.pack()
@@ -40,13 +36,17 @@ class ImageSelectorApp:
         self.save_button.pack()
         self.recapture_button.pack()
 
-        self.img_file_path=img_file_path
-        self.template_file_path=template_file_path
+        self.img_file_path = globals.IMG_FILE_PATH
 
         # Binding mouse events to the canvas
-        self.canvas.bind("<ButtonPress-1>", self.on_press)
-        self.canvas.bind("<B1-Motion>", self.on_drag)
-        self.canvas.bind("<ButtonRelease-1>", self.on_release)
+
+        # ignore press and drag mouse movements -- only handle mouse button release.
+        # self.canvas.bind("<ButtonPress-1>", self.on_press)
+        # self.canvas.bind("<B1-Motion>", self.on_drag)
+        # self.canvas.bind("<ButtonRelease-1>", self.on_release)
+        
+        self.canvas.bind("<ButtonRelease-1>", self.draw_square)
+        
 
 
     def open_image(self):
@@ -105,8 +105,21 @@ class ImageSelectorApp:
         # Delete any previous rectangle and draw the new one
         self.canvas.delete("rect")
         self.canvas.create_rectangle(
+            self.start_x, self.start_y, self.end_x, self.end_y, outline="red", tags="rect"
+        )
+
+    def draw_square(self, event):
+
+        self.start_x = self.canvas.canvasx(event.x)
+        self.start_y = self.canvas.canvasy(event.y)
+        self.end_x = self.start_x + globals.SQUARE_SIDE
+        self.end_y = self.start_y + globals.SQUARE_SIDE
+        # Delete any previous rectangle and draw the new one
+        self.canvas.delete("rect")
+        self.canvas.create_rectangle(
             self.start_x, self.start_y, self.end_x, self.end_y, outline="green", tags="rect"
         )
+        self.save_button.config(state=tk.ACTIVE)
 
     def on_release(self, event):
         # image is saved only if the 'save' button is pressed, not on mouse button release.

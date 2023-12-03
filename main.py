@@ -1,4 +1,5 @@
 import object_selection
 
-object_selection.run()
 
+object_selection.run()
+print('success')
